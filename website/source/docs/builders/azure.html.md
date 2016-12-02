@@ -57,7 +57,7 @@ builder.
 
 ### Optional:
 
--   `azure_tags` (object of name/value strings) - the user can define up to 15 tags.  Tag names cannot exceed 512 
+-   `azure_tags` (object of name/value strings) - the user can define up to 15 tags.  Tag names cannot exceed 512
     characters, and tag values cannot exceed 256 characters.  Tags are applied to every resource deployed by a Packer
     build, i.e. Resource Group, VM, NIC, VNET, Public IP, KeyVault, etc.
 
@@ -86,8 +86,8 @@ builder.
     automatically configure authentication credentials for the provisioned machine. For
     `Linux` this configures an SSH authorized key. For `Windows` this
     configures a WinRM certificate.
-    
--   `os_disk_size_gb` (int32) Specify the size of the OS disk in GB (gigabytes).  Values of zero or less than zero are 
+
+-   `os_disk_size_gb` (int32) Specify the size of the OS disk in GB (gigabytes).  Values of zero or less than zero are
     ignored.
 
 -   `virtual_network_name` (string) Use a pre-existing virtual network for the VM.  This option enables private
@@ -108,6 +108,9 @@ builder.
     [pricing](https://azure.microsoft.com/en-us/pricing/details/virtual-machines/) information. Defaults to `Standard_A1`.
 
     CLI example `azure vm sizes -l westus`
+
+-   `sas_url_lifetime` (string) Specify the lifetime of the SAS URLs returned, if this is not set it will default to 30
+    days, this takes the format of a duration of hours and minutes, i.e. 720h or 2h30m
 
 
 ## Basic Example
@@ -132,7 +135,7 @@ Here is a basic example for Azure.
     "image_publisher": "Canonical",
     "image_offer": "UbuntuServer",
     "image_sku": "14.04.4-LTS",
-    
+
     "azure_tags": {
       "dept": "engineering"
     },

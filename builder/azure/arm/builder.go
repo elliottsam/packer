@@ -178,7 +178,7 @@ func (b *Builder) Run(ui packer.Ui, hook packer.Hook, cache packer.Cache) (packe
 		return NewArtifact(
 			template.(*CaptureTemplate),
 			func(name string) string {
-				month := time.Now().AddDate(0, 1, 0).UTC()
+				month := time.Now().Add(b.config.sasUrlDuration).UTC()
 				sasUrl, _ := azureClient.BlobStorageClient.GetBlobSASURI(DefaultSasBlobContainer, name, month, DefaultSasBlobPermission)
 				return sasUrl
 			})

@@ -737,6 +737,50 @@ func TestConfigShouldRejectMissingCustomDataFile(t *testing.T) {
 	}
 }
 
+func TestConfigShouldRejectMalformedSasUrlLifetimeDuration(t *testing.T) {
+	config := map[string]string{
+		"capture_name_prefix":    "ignore",
+		"capture_container_name": "ignore",
+		"image_offer":            "ignore",
+		"image_publisher":        "ignore",
+		"image_sku":              "ignore",
+		"location":               "ignore",
+		"storage_account":        "ignore",
+		"resource_group_name":    "ignore",
+		"subscription_id":        "ignore",
+		"communicator":           "none",
+		"os_type":                constants.Target_Linux,
+	}
+
+	wellFormedSasUrlTimeline := []string{
+		"720h",
+		"12h30m",
+		"3600m",
+		"",
+	}
+
+	for _, v := range wellFormedSasUrlTimeline {
+		config["sas_url_lifetime"] = v
+		_, _, err := newConfig(config, getPackerConfiguration())
+		if err != nil {
+			t.Errorf("Expected test to pass, but it failed with the well-formed sas_url_lifetime set to %q.", v)
+		}
+	}
+
+	malformedSasUrlTimeline := []string{
+		"700",
+		"10d",
+	}
+
+	for _, v := range malformedSasUrlTimeline {
+		config["sas_url_lifetime"] = v
+		_, _, err := newConfig(config, getPackerConfiguration())
+		if err == nil {
+			t.Errorf("Expected test to fail, but it passed with the malformed sas_url_lifetime set to %q.", v)
+		}
+	}
+}
+
 func getArmBuilderConfiguration() map[string]string {
 	m := make(map[string]string)
 	for _, v := range requiredConfigValues {

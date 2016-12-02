@@ -109,6 +109,9 @@ type Config struct {
 
 	Comm communicator.Config `mapstructure:",squash"`
 	ctx  *interpolate.Context
+
+	SasUrlLifetime string `mapstructure:"sas_url_lifetime"`
+	sasUrlDuration time.Duration
 }
 
 type keyVaultCertificate struct {
@@ -206,6 +209,11 @@ func newConfig(raws ...interface{}) (*Config, []string, error) {
 	}
 
 	err = setCustomData(&c)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	err = setSasUrlDuration(&c)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -356,6 +364,19 @@ func setCustomData(c *Config) error {
 	}
 
 	c.customData = base64.StdEncoding.EncodeToString(b)
+	return nil
+}
+
+func setSasUrlDuration(c *Config) error {
+	if c.SasUrlLifetime == "" {
+		c.sasUrlDuration = 24 * 30 * time.Hour
+		return nil
+	}
+	b, err := time.ParseDuration(c.SasUrlLifetime)
+	if err != nil {
+		return err
+	}
+	c.sasUrlDuration = b
 	return nil
 }
 
